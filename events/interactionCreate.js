@@ -64,16 +64,71 @@ module.exports = {
 
                 await interaction.showModal(modalpenis);
             }
-        } else if (interaction.isStringSelectMenu()) {
-            //
-        } else if (interaction.isModalSubmit()) {
-            console.log(interaction)
-            const sender = interaction.fields.getTextInputValue('sendername')
-            const shortan = interaction.fields.getTextInputValue('shortansw');
-            const longan = interaction.fields.getTextInputValue('longansw');
-            const setan = interaction.fields.getTextInputValue('customset');
+            if (interaction.customId === "appYes") {
+                const appModal = new ModalBuilder()
+                    .setCustomId('appModal')
+                    .setTitle('Подача заявки');
 
-            interaction.reply(`Имя пользователя: ${sender}\nВаш короткий ответ: ${shortan}\nВаш длинный ответ: ${longan}\nВаш третий ответ: ${setan}`)
+                const appName = new TextInputBuilder()
+                    .setCustomId('appName')
+                    .setLabel("Ваше имя")
+                    .setStyle(TextInputStyle.Short)
+                    .setMaxLength(15)
+                    .setPlaceholder('Введите ваше имя')
+                    .setRequired(true);
+
+                const appAge = new TextInputBuilder()
+                    .setCustomId('appAge')
+                    .setLabel("Ваш возраст")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(true);
+
+                const appCity = new TextInputBuilder()
+                    .setCustomId('appCity')
+                    .setLabel("Ваш город")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(true);
+
+                const appCandidature = new TextInputBuilder()
+                    .setCustomId('appCandidature')
+                    .setLabel("Ваша кандидатура")
+                    .setStyle(TextInputStyle.Paragraph)
+                    .setRequired(true);
+
+
+
+                const actualFirstActionRow = new ActionRowBuilder().addComponents(appName);
+                const firstActionRow = new ActionRowBuilder().addComponents(appAge);
+                const secondActionRow = new ActionRowBuilder().addComponents(appCity);
+                const thirdActionRow = new ActionRowBuilder().addComponents(appCandidature);
+
+
+                appModal.addComponents(actualFirstActionRow, firstActionRow, secondActionRow, thirdActionRow);
+
+                await interaction.showModal(appModal);
+            }
+        } else if (interaction.isStringSelectMenu()) {
+            if (interaction.values[0] === 'sloykawithraspberry') {
+                interaction.reply(`Вы выбрали 🍓 **Слойку с малиной!**`)
+            }
+
+        } else if (interaction.isModalSubmit()) {
+            if (interaction.customId === 'modalpenis') {
+                const sender = interaction.fields.getTextInputValue('sendername')
+                const shortan = interaction.fields.getTextInputValue('shortansw');
+                const longan = interaction.fields.getTextInputValue('longansw');
+                const setan = interaction.fields.getTextInputValue('customset');
+
+                interaction.reply(`Имя: ${sender}\nВаш короткий ответ: ${shortan}\nВаш длинный ответ: ${longan}\nВаш третий ответ: ${setan}`)
+            }
+            if (interaction.customId === 'appModal') {
+                const userName = interaction.fields.getTextInputValue('appName')
+                const userAge = interaction.fields.getTextInputValue('appAge')
+                const userCity = interaction.fields.getTextInputValue('appCity')
+                const userCandidature = interaction.fields.getTextInputValue('appCandidature')
+
+                interaction.reply(`Вы ${userName} из города ${userCity}. Вам ${userAge} лет. Ваша кандидатура: \`\`\`${userCandidature}\`\`\``)
+            }
         }
     },
 };
